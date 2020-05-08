@@ -5,12 +5,23 @@ class UsersController < ApplicationController
         render json: users
     end
 
-    def new
-        user  = User.new
-    end
 
     def create
-        user = User.find_or_create_by(email: user_params[:email])
+        # byebug
+        user = User.new(
+            email: params[:email],
+            name: params[:name],
+            company: params[:company],
+            bio: params[:bio],
+            twitter_handle: params[:twitter_handle],
+            image_url: params[:image_url],
+            password: params[:password]
+        )
+        if user.save
+            render json: user
+        else 
+            render json: {errors: user.errors.full_messages}
+        end
     end
 
 
@@ -29,11 +40,10 @@ class UsersController < ApplicationController
         user.destroy
     end
 
-    private
+    # private
 
-    def user_params
-        params.permit(:email)
-    end
+    # def user_params
+    #     params.require(:user).permit(:email, :name, :twitter_handle, :company, :bio, :image_url)
+    # end
 
 end
-
