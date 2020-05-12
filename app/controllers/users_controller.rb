@@ -18,7 +18,7 @@ class UsersController < ApplicationController
             password: params[:password]
         )
         if user.save
-            token = JWT.encode({user_id: user.id}, ENV["secret_key"])
+            token = encode_token(user.id)
             render json: {user: user, token: token}
         else 
             render json: {errors: user.errors.full_messages}
