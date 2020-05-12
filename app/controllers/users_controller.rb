@@ -18,22 +18,23 @@ class UsersController < ApplicationController
             password: params[:password]
         )
         if user.save
-            render json: user
+            token = JWT.encode({user_id: user.id}, ENV["secret_key"])
+            render json: {user: user, token: token}
         else 
             render json: {errors: user.errors.full_messages}
         end
     end
 
 
-    def update
-        user = User.find(user_params[:id])
-        user.update(user_params)
-        if user.save
-            render json: user
-        else
-            render json: { errors: user.errors.full_messages }
-        end
-    end
+    # def update
+    #     user = User.find(user_params[:id])
+    #     user.update(user_params)
+    #     if user.save
+    #         render json: user
+    #     else
+    #         render json: { errors: user.errors.full_messages }
+    #     end
+    # end
 
     def destroy
         user = User.find(params[:id])
