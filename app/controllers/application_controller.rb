@@ -5,7 +5,11 @@ class ApplicationController < ActionController::API
     end
 
     def decoded_token(token)
-        JWT.decode(get_auth_header, ENV["secret_key"])[0]["user_id"]
+        begin
+            JWT.decode(get_auth_header, ENV["secret_key"])[0]["user_id"]
+        rescue
+            nil
+        end
     end
 
     def session_user
