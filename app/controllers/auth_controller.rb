@@ -1,14 +1,14 @@
 class AuthController < ApplicationController
 
-    def start
-        user = User.find_by(uid: params[:uid])
-        render json: user
+    # def start
+    #     user = User.find_by(uid: params[:uid])
+    #     render json: user
         # if user 
         #     render json: {user: user}
         # else
         #     render json: {errors: "Login failed, please check your username or password"}
         # end
-    end
+    # end
 
 
     # def login
