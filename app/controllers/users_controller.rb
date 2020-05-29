@@ -16,15 +16,17 @@ class UsersController < ApplicationController
         user = User.new(
             email: params[:email],
             name: params[:name],
+            uid: params[:uid],
+            auth_provider: params[:auth_provider],
+            auth_token: params[:auth_token],
+            twitter_handle: params[:twitter_handle],
+            github_username: params[:github_username],
             company: params[:company],
             bio: params[:bio],
-            twitter_handle: params[:twitter_handle],
-            image_url: params[:image_url],
-            password: params[:password]
+            image_url: params[:image_url]
         )
         if user.save
-            token = encode_token(user.id)
-            render json: {user: user, token: token}
+            render json: {user: user}
         else 
             render json: {errors: user.errors.full_messages}
         end
@@ -49,7 +51,7 @@ class UsersController < ApplicationController
     private
 
     def user_params
-        params.require(:user).permit(:email, :name, :twitter_handle, :company, :bio, :image_url)
+        params.require(:user).permit(:email, :name, :uid, :auth_provider, :auth_token, :twitter_handle, :github_username, :company, :bio, :image_url)
     end
 
 end
