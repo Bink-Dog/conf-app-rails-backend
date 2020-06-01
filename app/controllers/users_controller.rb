@@ -1,3 +1,5 @@
+require 'mini_magick'
+
 class UsersController < ApplicationController
 
     def index
@@ -5,11 +7,11 @@ class UsersController < ApplicationController
         render json: users
     end
 
+
     def show
         user = User.find(params[:id])
         render json: user
     end
-
 
 
     def start
@@ -38,28 +40,6 @@ class UsersController < ApplicationController
     end
 
 
-    # def create
-    #     # byebug
-    #     user = User.new(
-    #         email: params[:email],
-    #         name: params[:name],
-    #         uid: params[:uid],
-    #         auth_provider: params[:auth_provider],
-    #         auth_token: params[:auth_token],
-    #         twitter_handle: params[:twitter_handle],
-    #         github_username: params[:github_username],
-    #         company: params[:company],
-    #         bio: params[:bio],
-    #         image_url: params[:image_url]
-    #     )
-    #     if user.save
-    #         render json: {user: user}
-    #     else 
-    #         render json: {errors: user.errors.full_messages}
-    #     end
-    # end
-
-
     def update
         user = User.find(params[:id])
         user.update(user_params)
@@ -73,6 +53,17 @@ class UsersController < ApplicationController
     def destroy
         user = User.find(params[:id])
         user.destroy
+    end
+
+    def get_user_image
+        user = User.find_by(id: params[:id])
+
+        image = MiniMagick::Image.open(user.image_url)
+
+        image.resize "70x70"
+
+        send_data image.to_blob, :type => "image/jpeg", :disposition => "inline"
+
     end
 
     private
