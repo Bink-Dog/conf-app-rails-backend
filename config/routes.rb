@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   post "/start", to: "users#start"
 
+  get "/image", to: "users#get_user_image"
+
   # get "/auto_login", to: "auth#auto_login"
 end
 

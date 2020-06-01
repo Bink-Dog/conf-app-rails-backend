@@ -44,3 +44,7 @@ gem 'active_model_serializers'
 gem "jwt", "~> 2.2"
 
 gem 'figaro'
+
+gem 'down'
+
+gem 'mini_magick'
