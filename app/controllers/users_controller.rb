@@ -60,7 +60,7 @@ class UsersController < ApplicationController
 
         image = MiniMagick::Image.open(user.image_url)
 
-        image.resize "70x70"
+        image.resize "50x50"
 
         send_data image.to_blob, :type => "image/jpeg", :disposition => "inline"
 
