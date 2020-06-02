@@ -16,7 +16,7 @@ class UsersController < ApplicationController
 
     def start
         if user = User.find_by(uid: params[:uid])
-            render json: {user: user, new_user: false}
+            render json: {user: user, new_user: false, events: user.events}
         else
             user = User.new(
             email: params[:email],
@@ -31,7 +31,7 @@ class UsersController < ApplicationController
             image_url: params[:image_url]
         )
             if user.save
-                render json: {user: user, new_user: true}
+                render json: {user: user, new_user: true, events: user.events}
             else 
                 render json: {errors: user.errors.full_messages}
             end
