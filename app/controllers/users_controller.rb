@@ -13,7 +13,6 @@ class UsersController < ApplicationController
         render json: user
     end
 
-
     def start
         if user = User.find_by(uid: params[:uid])
             render json: {user: user, new_user: false, events: user.events}
