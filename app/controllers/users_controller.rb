@@ -13,6 +13,7 @@ class UsersController < ApplicationController
         render json: user
     end
 
+
     def start
         if user = User.find_by(uid: params[:uid])
             render json: {user: user, new_user: false, events: user.events}
@@ -49,10 +50,12 @@ class UsersController < ApplicationController
         end
     end
 
+
     def destroy
         user = User.find(params[:id])
         user.destroy
     end
+
 
     def get_user_image
         user = User.find_by(id: params[:id])
@@ -62,7 +65,6 @@ class UsersController < ApplicationController
         image.resize "50x50"
 
         send_data image.to_blob, :type => "image/jpeg", :disposition => "inline"
-
     end
 
     private
