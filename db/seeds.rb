@@ -12,7 +12,7 @@ user2 = User.create(name: "Test User #2", email: "test2@test.com")
 event1 = Event.create(name: "droidcon NYC")
 event2 = Event.create(name: "droidcon SF")
 
-user_event1 = UserEvent.create(user_id: 5, event_id: 2)
-user_event2 = UserEvent.create(user_id: 6, event_id: 5)
-user_event3 = UserEvent.create(user_id: 5, event_id: 1)
+user_event1 = UserEvent.create(user_id: user1.id, event_id: event1.id)
+user_event2 = UserEvent.create(user_id: user2.id, event_id: event2.id)
+user_event3 = UserEvent.create(user_id: user1.id, event_id: event2.id)
 
