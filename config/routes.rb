@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   get "/image", to: "users#get_user_image"
 
   post "user_events", to: "user_events#create"
+
+  post "process-payment", to: "charges#charge_card"
  
 end
 
