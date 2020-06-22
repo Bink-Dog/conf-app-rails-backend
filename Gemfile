@@ -48,3 +48,5 @@ gem 'figaro'
 gem 'down'
 
 gem 'mini_magick'
+
+gem 'square.rb'
