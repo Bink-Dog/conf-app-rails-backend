@@ -10,4 +10,4 @@ class UserEventsController < ApplicationController
         render json: user_event
     end
     
-end
+end 

@@ -7,12 +7,8 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 user1 = User.create(name: "Test User #1", email: "test1@test.com")
-user2 = User.create(name: "Test User #2", email: "test2@test.com")
 
-event1 = Event.create(name: "droidcon NYC")
-event2 = Event.create(name: "droidcon SF")
+event1 = Event.create(name: "Tuturial Event")
 
 user_event1 = UserEvent.create(user_id: user1.id, event_id: event1.id)
-user_event2 = UserEvent.create(user_id: user2.id, event_id: event2.id)
-user_event3 = UserEvent.create(user_id: user1.id, event_id: event2.id)
 
