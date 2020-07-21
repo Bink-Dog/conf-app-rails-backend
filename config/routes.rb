@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   post "/start", to: "users#start"
 
+  post "/logout", to: "users#logout"
+
   get "/image", to: "users#get_user_image"
 
   post "user_events", to: "user_events#create"
