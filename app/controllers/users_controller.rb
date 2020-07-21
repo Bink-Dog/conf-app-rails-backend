@@ -16,6 +16,8 @@ class UsersController < ApplicationController
 
     def start
         if user = User.find_by(uid: params[:uid])
+            session[:user_id] = user.id
+            puts "-------------SESSION USER ID #{session[:user_id]}------------------- "
             render json: {user: user, new_user: false, events: user.events}
         else
             user = User.new(
@@ -42,6 +44,11 @@ class UsersController < ApplicationController
 
     def update
         user = User.find(params[:id])
+    
+        if user.id == current_user.id
+            puts "-----------ID MATCHED---------------"
+        end
+
         user.update(user_params)
         if user.save
             render json: user
