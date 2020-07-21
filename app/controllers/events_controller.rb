@@ -1,14 +1,12 @@
 class EventsController < ApplicationController
 
     def index
-        puts "-------------EventsController #{session[:user_id]}------------------- "
-        events = Event.all 
+        events = Event.all
         render json: events
     end
 
 
     def show
-        puts "-------------EventsController show #{session[:user_id]}------------------- "
         event = Event.find(params[:id])
         render json: event
     end

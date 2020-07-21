@@ -17,7 +17,6 @@ class UsersController < ApplicationController
     def start
         if user = User.find_by(uid: params[:uid])
             session[:user_id] = user.id
-            puts "-------------SESSION USER ID #{session[:user_id]}------------------- "
             render json: {user: user, new_user: false, events: user.events}
         else
             user = User.new(
@@ -44,7 +43,6 @@ class UsersController < ApplicationController
 
 
     def logout
-        puts "------------- logout -------------"
         session[:user_id] = nil
     end
 
