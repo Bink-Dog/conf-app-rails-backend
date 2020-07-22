@@ -41,13 +41,13 @@ class EventsController < ApplicationController
 
 
     def get_future_events
-        events = Event.where("start_time > '" + Time.now.to_s +"'")
+        events = Event.where("finish_time >= ? AND host_user = ?", Time.now, session[:user_id]).limit(5).order(:finish_time)
         render json: events
     end
 
 
     def get_past_events
-        events = Event.where("start_time <" + Time.now.to_s)
+        events = Event.where("finish_time < ? AND host_user = ?", Time.now, session[:user_id]).limit(5).order("finish_time DESC")
         render json: events
     end
 
