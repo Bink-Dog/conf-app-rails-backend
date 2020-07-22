@@ -12,6 +12,11 @@ Rails.application.routes.draw do
   post "user_events", to: "user_events#create"
 
   post "process-payment", to: "charges#charge_card"
+
+  get "/get-future-events", to: "events#get_future_events"
+
+  get "/get-past-events", to: "events#get_past_events"
+
  
 end
 

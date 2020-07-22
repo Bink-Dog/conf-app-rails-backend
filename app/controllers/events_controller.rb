@@ -12,6 +12,7 @@ class EventsController < ApplicationController
     end
 
 
+
     def create
         event = Event.new(event_params)
         if event.save
@@ -36,6 +37,18 @@ class EventsController < ApplicationController
     def destroy
         event = Event.find(params[:id])
         event.destroy
+    end
+
+
+    def get_future_events
+        events = Event.where("start_time > '" + Time.now.to_s +"'")
+        render json: events
+    end
+
+
+    def get_past_events
+        events = Event.where("start_time <" + Time.now.to_s)
+        render json: events
     end
 
 
