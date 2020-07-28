@@ -48,11 +48,15 @@ class UsersController < ApplicationController
 
 
     def update
+        puts "-----PARAMS ID: #{params[:id]}---------------------"
+        puts "-----SESSION USER ID: #{session[:user_id]}---------------------"
+
         user = User.find(params[:id])
 
-        if user.id == current_user.id
-            puts "-----------ID MATCHED---------------"
-        end
+
+        # if user.id == current_user.id
+        #     puts "-----------ID MATCHED---------------"
+        # end
 
         user.update(user_params)
         if user.save
