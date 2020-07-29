@@ -48,6 +48,7 @@ class UsersController < ApplicationController
 
 
     def update
+        puts "-----env: #{Rails.env}---------------------"
         puts "-----PARAMS ID: #{params[:id]}---------------------"
         puts "-----SESSION USER ID: #{session[:user_id]}---------------------"
 
