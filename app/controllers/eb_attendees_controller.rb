@@ -1,0 +1,2 @@
+class EbAttendeesController < ApplicationController
+end

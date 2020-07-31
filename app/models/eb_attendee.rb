@@ -1,0 +1,2 @@
+class EbAttendee < ApplicationRecord
+end
