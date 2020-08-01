@@ -18,6 +18,9 @@ Rails.application.routes.draw do
 
   get "/get-past-events", to: "events#get_past_events"
 
- 
+  get "/user-eventbrite-token", to: "users#get_user_eventbrite_token"
+
+  post "/user-eventbrite-token", to: "users#set_user_eventbrite_token"
+
 end
 

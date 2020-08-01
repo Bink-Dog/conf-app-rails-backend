@@ -54,16 +54,15 @@ class UsersController < ApplicationController
 
         user = User.find(params[:id])
 
-
-        # if user.id == current_user.id
-        #     puts "-----------ID MATCHED---------------"
-        # end
-
-        user.update(user_params)
-        if user.save
-            render json: user
+        if user.id == session[:user_id]
+            user.update(user_params)
+            if user.save
+                render json: user
+            else
+                render json: {errors: user.errors.full_messages}
+            end
         else
-            render json: {errors: user.errors.full_messages}
+            render json: {errors: "Wrong user"}
         end
     end
 
@@ -82,6 +81,26 @@ class UsersController < ApplicationController
         image.resize "50x50"
 
         send_data image.to_blob, :type => "image/jpeg", :disposition => "inline"
+    end
+
+
+    def get_user_eventbrite_token
+        render json: {eventbrite_token: current_user.eventbrite_token}
+    end
+
+
+    def set_user_eventbrite_token
+
+        user = current_user
+        token = params[:eventbrite_token]
+        puts "-----token: #{token}-----"
+
+        user.eventbrite_token = token
+        if user.save
+            render json: {user: user, new_user: true, events: user.events}
+        else
+            render json: {errors: user.errors.full_messages}
+        end
     end
 
     private
