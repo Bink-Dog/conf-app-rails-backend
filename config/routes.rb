@@ -22,5 +22,13 @@ Rails.application.routes.draw do
 
   post "/user-eventbrite-token", to: "users#set_user_eventbrite_token"
 
+  post "/eb-attendees-batch-upload", to: "eb_attendees#batch_upload"
+
+  get "/eb-attendees-attendee-count/:id", to: "eb_attendees#attendee_count"
+
+  get "/home_info", to: "events#home_screen_data"
+
+  post "/eventbright-register", to: "events#eventbright_register"
+
 end
 
