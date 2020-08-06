@@ -30,5 +30,7 @@ Rails.application.routes.draw do
 
   post "/eventbright-register", to: "events#eventbright_register"
 
+  post "/process-webhook", to: "events#process_webhook"
+
 end
 

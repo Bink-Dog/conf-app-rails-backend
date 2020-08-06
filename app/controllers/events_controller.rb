@@ -1,3 +1,6 @@
+require 'net/http'
+require 'json'
+
 class EventsController < ApplicationController
 
     def index
@@ -84,11 +87,90 @@ class EventsController < ApplicationController
         render json: events
     end
 
+    def process_webhook
+        config = params[:config]
+        api_url = params[:api_url]
+        webhook_id = config[:webhook_id]
+        action = config[:action]
+        event = Event.where("eventbrite_webhook_id = ?", webhook_id).limit(1).first!
+        user = User.find(event.host_user)
+        token = user.eventbrite_token
+
+        puts "------- webhook_id #{webhook_id} --------"
+        puts "------- api_url #{api_url} --------"
+        puts "------- token #{token} --------"
+        puts "------- action #{action} --------"
+
+        url = URI.parse(api_url)
+        bearer_header_value = 'Bearer ' + token
+        req = Net::HTTP::Get.new(url.to_s, {'Authorization'=>bearer_header_value})
+        res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http|
+            http.request(req)
+        }
+
+        puts res.body
+
+        json = JSON.parse(res.body)
+        if action == "attendee.updated"
+            insert_attendee(json)
+        elsif action == "event.updated"
+            update_event(json)
+        end
+    end
+
+
 
     private
 
+    def update_event(json)
+        id = json["id"]
+        name = json["name"]["text"]
+        description = json["description"]["text"]
+        startStr = json["start"]["local"]
+        endStr = json["end"]["local"]
+        timezone = json["start"]["timezone"]
+
+        puts "--- id #{id} ---"
+        puts "--- name #{name} ---"
+
+        eb_event = Event.find_by(eventbrite_id: id)
+
+        if eb_event.start_time > DateTime.now
+            eb_event.update(
+                    name: name,
+                    description: description,
+                    start_time: startStr,
+                    finish_time: endStr,
+                    timezone: timezone
+            )
+        else
+            eb_event.update(
+                    name: name,
+                    description: description
+            )
+        end
+    end
+
+    def insert_attendee(json)
+        eb_event_id = json["event_id"]
+        email = json["profile"]["email"]
+        id = json["id"]
+
+        puts "----- att: #{email}/#{id} ----"
+
+        dbrec = EbAttendee.find_by("event_id = ? and user_eventbrite_id = ?", eb_event_id, id)
+
+        if dbrec == nil
+            EbAttendee.create(event_id: eb_event_id, email: email, used: false, user_eventbrite_id: id)
+        else
+            unless dbrec.used
+                dbrec.update(event_id: eb_event_id, email: email)
+            end
+        end
+    end
+
     def event_params
-        params.require(:event).permit(:name, :host_user, :price, :description, :start_time, :finish_time, :timezone, :venue, :venueData, :eventbrite_id)
+        params.require(:event).permit(:name, :host_user, :price, :description, :start_time, :finish_time, :timezone, :venue, :venueData, :eventbrite_id, :eventbrite_webhook_id)
     end
 
 end

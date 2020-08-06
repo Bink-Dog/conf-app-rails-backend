@@ -93,9 +93,9 @@ class UsersController < ApplicationController
 
         user = current_user
         token = params[:eventbrite_token]
-        puts "-----token: #{token}-----"
 
         user.eventbrite_token = token
+
         if user.save
             render json: {user: user, new_user: true, events: user.events}
         else

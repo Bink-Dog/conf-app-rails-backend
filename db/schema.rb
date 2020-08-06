@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_01_222726) do
+ActiveRecord::Schema.define(version: 2020_08_06_014443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 2020_08_01_222726) do
     t.string "venue"
     t.string "venueData"
     t.string "eventbrite_id"
+    t.string "eventbrite_webhook_id"
   end
 
   create_table "user_events", force: :cascade do |t|
@@ -61,6 +62,7 @@ ActiveRecord::Schema.define(version: 2020_08_01_222726) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "eventbrite_token"
+    t.string "eventbrite_user_id"
   end
 
 end
