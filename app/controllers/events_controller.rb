@@ -118,7 +118,20 @@ class EventsController < ApplicationController
         end
     end
 
+    def event_management_info
+        if request.headers['MAIN_SERVER_SECRET'] != ENV['MAIN_SERVER_SECRET']
+            render json: {
+                    message: "Secrets don't match"
+            }, status: 403
+        else
+            event_id = params[:id]
+            event = Event.find(event_id.to_i)
 
+            render json: {
+                    max_users: 50
+            }
+        end
+    end
 
     private
 
