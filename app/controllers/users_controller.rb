@@ -92,8 +92,11 @@ class UsersController < ApplicationController
     def set_user_eventbrite_token
 
         user = current_user
+        puts "-------------#{user.id}--------------"
+        puts "-------------#{user.email}--------------"
         token = params[:eventbrite_token]
-
+        
+        
         user.eventbrite_token = token
 
         if user.save
