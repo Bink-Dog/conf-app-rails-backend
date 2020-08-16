@@ -50,3 +50,5 @@ gem 'down'
 gem 'mini_magick'
 
 gem 'square.rb'
+
+gem 'mux_ruby', :git => 'git://github.com/muxinc/mux-ruby.git'

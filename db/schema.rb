@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_08_231759) do
+ActiveRecord::Schema.define(version: 2020_08_14_232341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,8 @@ ActiveRecord::Schema.define(version: 2020_08_08_231759) do
     t.integer "max_attendees", default: 50, null: false
     t.integer "event_length", default: 120, null: false
     t.integer "amount_paid", default: 0, null: false
+    t.string "admin_venue_data", default: "{}", null: false
+    t.string "static_venue_data", default: "{}", null: false
   end
 
   create_table "user_events", force: :cascade do |t|

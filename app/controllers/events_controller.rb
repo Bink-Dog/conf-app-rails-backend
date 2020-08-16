@@ -1,40 +1,51 @@
 require 'net/http'
 require 'json'
+require 'mux_ruby'
 
 class EventsController < ApplicationController
+
+    MuxRuby.configure do |config|
+        config.username = ENV['MUX_TOKEN_ID']
+        config.password = ENV['MUX_TOKEN_SECRET']
+    end
 
     def index
         events = Event.all
         render json: events
     end
 
-
     def show
         event = Event.find(params[:id])
         render json: event
     end
 
-
-
     def create
+        venue_data = create_admin_static_venue_data(event_params["venue"])
+
         event = Event.new(event_params)
+        event.admin_venue_data = venue_data[:admin].to_json
+        event.static_venue_data = venue_data[:static].to_json
+
         if event.save
             render json: event
         else
             render json: { errors: event.errors.full_messages }
         end
     end
-
 
     def update
-        event = Event.find(params[:id])
+        event_id = params[:id]
+        event = Event.find(event_id)
         event.update(event_params)
+        puts("notify users")
+        notify_event_users(event_id)
         if event.save
             render json: event
         else
             render json: { errors: event.errors.full_messages }
         end
     end
+
 
 
     def destroy
@@ -128,12 +139,71 @@ class EventsController < ApplicationController
             event = Event.find(event_id.to_i)
 
             render json: {
-                    max_users: 50
+                    max_users: event.max_attendees
             }
         end
     end
 
     private
+
+    def create_admin_static_venue_data(venue)
+
+        venue_data = {}
+        static = {}
+        venue_data[:static] = static
+        admin = {}
+        venue_data[:admin] = admin
+
+        venue_data[:main_stream] = create_mux_stream(:main_stream, static, admin)
+
+        if venue == "MainVenue"
+            venue_data[:room_stream_1] = create_mux_stream(:room_stream_1, static, admin)
+            venue_data[:room_stream_2] = create_mux_stream(:room_stream_2, static, admin)
+            venue_data[:room_stream_3] = create_mux_stream(:room_stream_3, static, admin)
+            venue_data[:room_stream_4] = create_mux_stream(:room_stream_4, static, admin)
+        end
+
+        venue_data
+    end
+
+    def create_mux_stream(label, static, admin)
+        # API Client Init
+        live_api = MuxRuby::LiveStreamsApi.new
+
+        # Create the Live Stream
+        create_asset_request = MuxRuby::CreateAssetRequest.new
+        create_asset_request.playback_policy = [MuxRuby::PlaybackPolicy::PUBLIC]
+        create_live_stream_request = MuxRuby::CreateLiveStreamRequest.new
+        create_live_stream_request.new_asset_settings = create_asset_request
+        create_live_stream_request.playback_policy = [MuxRuby::PlaybackPolicy::PUBLIC]
+
+        static_label = {}
+        static[label] = static_label
+        admin_label = {}
+        admin[label] = admin_label
+
+        begin
+            #Create a live stream playback ID
+            stream = live_api.create_live_stream(create_live_stream_request)
+
+            id = stream.data.id
+            stream_key = stream.data.stream_key
+            playback_id = stream.data.playback_ids[0].id
+
+            # Give back the RTMP entry point playback endpoint
+            puts "New Live Stream created!"
+            puts "RTMP Endpoint: rtmp://live.mux.com/app"
+            puts "Stream Key: #{stream.data.stream_key}"
+
+            static_label[:id] = id
+            admin_label[:id] = id
+            static_label[:playback_id] = playback_id
+            admin_label[:playback_id] = playback_id
+            admin_label[:stream_key] = stream_key
+        rescue MuxRuby::ApiError => e
+            puts "Exception when calling LiveStreamsApi->create_live_stream_playback_id: #{e}"
+        end
+    end
 
     def update_event(json)
         id = json["id"]
@@ -186,4 +256,35 @@ class EventsController < ApplicationController
         params.require(:event).permit(:name, :host_user, :price, :description, :start_time, :finish_time, :timezone, :venue, :venueData, :eventbrite_id, :eventbrite_webhook_id)
     end
 
+    def notify_event_users(event_id)
+
+      url = "#{ENV['WS_SERVER']}/user/updateData/#{event_id}"
+      puts(url)
+      uri = URI(url)
+      https = Net::HTTP.new(uri.host, uri.port)
+      if url.start_with?("https")
+        https.use_ssl = true
+      end
+
+      request = Net::HTTP::Post.new(uri.path)
+
+      request['Content-Type'] = 'application/json'
+      # request['HEADER2'] = 'VALUE2'
+      #
+      request.body = "{}"
+
+      response = https.request(request)
+      puts response.body
+
+      # uri = URI.parse("http://localhost:3000/users")
+      # header = {'Content-Type': 'text/json'}
+      #
+      # req = Net::HTTP::Get.new(url.to_s, {'Authorization'=>bearer_header_value})
+      # res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http|
+      #   http.request(req)
+      # }
+      #
+      # puts res.body
+
+    end
 end
