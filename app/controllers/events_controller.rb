@@ -29,7 +29,7 @@ class EventsController < ApplicationController
         if event.save
             render json: event
         else
-            render json: { errors: event.errors.full_messages }
+            render json: {errors: event.errors.full_messages}
         end
     end
 
@@ -42,7 +42,7 @@ class EventsController < ApplicationController
         if event.save
             render json: event
         else
-            render json: { errors: event.errors.full_messages }
+            render json: {errors: event.errors.full_messages}
         end
     end
 
@@ -113,8 +113,8 @@ class EventsController < ApplicationController
 
         url = URI.parse(api_url)
         bearer_header_value = 'Bearer ' + token
-        req = Net::HTTP::Get.new(url.to_s, {'Authorization'=>bearer_header_value})
-        res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http|
+        req = Net::HTTP::Get.new(url.to_s, {'Authorization' => bearer_header_value})
+        res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') { |http|
             http.request(req)
         }
 
@@ -129,9 +129,7 @@ class EventsController < ApplicationController
     end
 
     def event_management_info
-      headerSecret = request.headers['MAIN_SERVER_SECRET']
-      puts "headerSecret #{headerSecret}"
-      puts "serverSecret #{ENV['MAIN_SERVER_SECRET']}"
+        headerSecret = request.headers['HTTP_MAIN_SERVER_SECRET']
 
         if headerSecret != ENV['MAIN_SERVER_SECRET']
             render json: {
@@ -261,33 +259,33 @@ class EventsController < ApplicationController
 
     def notify_event_users(event_id)
 
-      url = "#{ENV['WS_SERVER']}/user/updateData/#{event_id}"
-      puts(url)
-      uri = URI(url)
-      https = Net::HTTP.new(uri.host, uri.port)
-      if url.start_with?("https")
-        https.use_ssl = true
-      end
+        url = "#{ENV['WS_SERVER']}/user/updateData/#{event_id}"
+        puts(url)
+        uri = URI(url)
+        https = Net::HTTP.new(uri.host, uri.port)
+        if url.start_with?("https")
+            https.use_ssl = true
+        end
 
-      request = Net::HTTP::Post.new(uri.path)
+        request = Net::HTTP::Post.new(uri.path)
 
-      request['Content-Type'] = 'application/json'
-      # request['HEADER2'] = 'VALUE2'
-      #
-      request.body = "{}"
+        request['Content-Type'] = 'application/json'
+        # request['HEADER2'] = 'VALUE2'
+        #
+        request.body = "{}"
 
-      response = https.request(request)
-      puts response.body
+        response = https.request(request)
+        puts response.body
 
-      # uri = URI.parse("http://localhost:3000/users")
-      # header = {'Content-Type': 'text/json'}
-      #
-      # req = Net::HTTP::Get.new(url.to_s, {'Authorization'=>bearer_header_value})
-      # res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http|
-      #   http.request(req)
-      # }
-      #
-      # puts res.body
+        # uri = URI.parse("http://localhost:3000/users")
+        # header = {'Content-Type': 'text/json'}
+        #
+        # req = Net::HTTP::Get.new(url.to_s, {'Authorization'=>bearer_header_value})
+        # res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http|
+        #   http.request(req)
+        # }
+        #
+        # puts res.body
 
     end
 end
