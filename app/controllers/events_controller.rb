@@ -129,7 +129,11 @@ class EventsController < ApplicationController
     end
 
     def event_management_info
-        if request.headers['MAIN_SERVER_SECRET'] != ENV['MAIN_SERVER_SECRET']
+      headerSecret = request.headers['MAIN_SERVER_SECRET']
+      puts "headerSecret #{headerSecret}"
+      puts "serverSecret #{ENV['MAIN_SERVER_SECRET']}"
+
+        if headerSecret != ENV['MAIN_SERVER_SECRET']
             render json: {
                     message: "Secrets don't match"
             }, status: 403
