@@ -10,7 +10,11 @@ Rails.application.routes.draw do
 
   get "/image", to: "users#get_user_image"
 
+  get "/user_events/:id", to: "user_events#show"
+
   post "user_events", to: "user_events#create"
+
+  patch "/user_events/:id", to: "user_events#update"
 
   post "process-payment", to: "charges#charge_card"
 
