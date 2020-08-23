@@ -37,5 +37,7 @@ Rails.application.routes.draw do
   post "/process-webhook", to: "events#process_webhook"
 
   get "/event-management-info/:id", to: "events#event_management_info"
+
+  get "/event-admin-venue-data/:id", to: "events#event_admin_venue_data"
 end
 

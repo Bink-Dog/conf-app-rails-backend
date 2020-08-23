@@ -46,7 +46,6 @@ class EventsController < ApplicationController
         end
     end
 
-
     def destroy
         event = Event.find(params[:id])
         event.destroy
@@ -66,6 +65,19 @@ class EventsController < ApplicationController
                 future: future,
                 available: available
         }
+    end
+
+    def event_admin_venue_data
+        event = Event.find(params[:id])
+        if event.host_user == session[:user_id]
+            render json: {
+                    admin_venue_data: event.admin_venue_data
+            }
+        elsif
+        render json: {
+                errors: "You don't have access to this event data"
+        }
+        end
     end
 
     def eventbright_register
