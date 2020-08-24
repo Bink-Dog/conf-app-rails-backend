@@ -5,10 +5,18 @@ class UserEventsController < ApplicationController
         render json: user_event
     end
 
-    def show
-        user_event = UserEvent.where("event_id = ?",  params[:id])
+    def show_users
+        search_string = params[:search_string]
+
+        if search_string == ""
+            user_event = UserEvent.where("event_id = ?",  params[:id]).limit(50)
+        else 
+            user_event = UserEvent.joins(:user).where("event_id = ? AND (users.name ILIKE ? OR users.email ILIKE ?)",  params[:id], '%' + search_string + '%', '%' + search_string + '%').limit(50)
+        end
+
         render json: user_event
     end
+
 
     def create
         user_event = UserEvent.create(user_id: params[:user_id], event_id: params[:event_id])
