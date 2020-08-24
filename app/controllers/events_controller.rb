@@ -157,6 +157,10 @@ class EventsController < ApplicationController
         end
     end
 
+    def webhook_echo
+        puts params.inspect
+    end
+
     private
 
     def create_admin_static_venue_data(venue)
