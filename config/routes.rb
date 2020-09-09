@@ -40,6 +40,8 @@ Rails.application.routes.draw do
 
   get "/event-admin-venue-data/:id", to: "events#event_admin_venue_data"
 
+  get "/event-user-info/:id", to: "events#event_user_info"
+
   post "/mux-webhook", to: "events#webhook_echo"
 end
 

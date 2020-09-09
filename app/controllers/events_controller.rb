@@ -157,6 +157,16 @@ class EventsController < ApplicationController
         end
     end
 
+    def event_user_info
+        event_id = params[:id]
+        event = Event.find(event_id.to_i)
+        user_event = UserEvent.find_by(user_id: current_user_id, event_id: event_id)
+        render json: {
+                is_host: event.host_user == current_user_id,
+                my_role: user_event.role
+        }
+    end
+
     def webhook_echo
         puts params.inspect
     end
