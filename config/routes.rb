@@ -10,7 +10,9 @@ Rails.application.routes.draw do
 
   get "/image", to: "users#get_user_image"
 
-  get "/user_events/:id", to: "user_events#show"
+  # get "/user_events/:id", to: "user_events#show"
+  
+  get "/user_events_search/:id", to: "user_events#show_users"
 
   post "user_events", to: "user_events#create"
 
