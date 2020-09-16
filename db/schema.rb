@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_19_235533) do
+ActiveRecord::Schema.define(version: 2020_09_13_010443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,15 @@ ActiveRecord::Schema.define(version: 2020_08_19_235533) do
     t.integer "amount_paid", default: 0, null: false
     t.string "admin_venue_data", default: "{}", null: false
     t.string "static_venue_data", default: "{}", null: false
+  end
+
+  create_table "livestreams", force: :cascade do |t|
+    t.string "mux_id", null: false
+    t.datetime "last_update", null: false
+    t.string "data", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["mux_id"], name: "index_livestreams_on_mux_id", unique: true
   end
 
   create_table "user_events", force: :cascade do |t|

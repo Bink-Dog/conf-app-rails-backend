@@ -168,7 +168,18 @@ class EventsController < ApplicationController
     end
 
     def webhook_echo
-        puts params.inspect
+        if params["type"].start_with?("video.live_stream")
+            lsId = params["object"]["id"]
+            streamStatus = params["data"]["status"]
+            data = params["data"].to_json
+            dbrec = Livestream.find_by(mux_id: lsId)
+
+            if dbrec == nil
+                Livestream.create(mux_id: lsId, last_update: DateTime.current, data: data)
+            else
+                dbrec.update(last_update: DateTime.current, data: data)
+            end
+        end
     end
 
     private
@@ -312,6 +323,26 @@ class EventsController < ApplicationController
         # }
         #
         # puts res.body
+
+    end
+
+    def notify_livestream_update(mux_id)
+
+        url = "#{ENV['WS_SERVER']}/user/updateMuxStream/#{mux_id}"
+        puts(url)
+        uri = URI(url)
+        https = Net::HTTP.new(uri.host, uri.port)
+        if url.start_with?("https")
+            https.use_ssl = true
+        end
+
+        request = Net::HTTP::Post.new(uri.path)
+
+        request['Content-Type'] = 'application/json'
+        request.body = "{}"
+
+        response = https.request(request)
+        puts response.body
 
     end
 end
