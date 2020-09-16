@@ -7,11 +7,12 @@ class UserEventsController < ApplicationController
 
     def show_users
         search_string = params[:search_string]
+        page = params[:page].to_i
 
         if search_string == ""
-            user_event = UserEvent.where("event_id = ?",  params[:id]).limit(50)
+            user_event = UserEvent.where("event_id = ?",  params[:id]).limit(50).offset(page * 50)
         else 
-            user_event = UserEvent.joins(:user).where("event_id = ? AND (users.name ILIKE ? OR users.email ILIKE ?)",  params[:id], '%' + search_string + '%', '%' + search_string + '%').limit(50)
+            user_event = UserEvent.joins(:user).where("event_id = ? AND (users.name ILIKE ? OR users.email ILIKE ?)",  params[:id], '%' + search_string + '%', '%' + search_string + '%').limit(50).offset(page * 50)
         end
 
         render json: user_event
