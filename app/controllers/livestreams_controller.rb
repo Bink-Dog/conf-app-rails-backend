@@ -1,4 +1,10 @@
-class EbAttendeesController < ApplicationController
+class LivestreamsController < ApplicationController
+
+    def show
+        livestream = Livestream.find_by(mux_id: params[:id])
+        render json: livestream
+    end
+
 #     def batch_upload
 #         attendees = params[:attendees]
 #         eb_event_id = params[:eb_event_id]
