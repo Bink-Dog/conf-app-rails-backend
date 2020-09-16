@@ -45,5 +45,7 @@ Rails.application.routes.draw do
   get "/event-user-info/:id", to: "events#event_user_info"
 
   post "/mux-webhook", to: "events#webhook_echo"
+
+  get "/ls/:id", to: "livestreams#show"
 end
 
