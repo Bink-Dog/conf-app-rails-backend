@@ -1,4 +1,4 @@
-class EbAttendeesController < ApplicationController
+class LivestreamsController < ApplicationController
 #     def batch_upload
 #         attendees = params[:attendees]
 #         eb_event_id = params[:eb_event_id]
